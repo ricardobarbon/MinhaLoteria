@@ -50,7 +50,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                         "" + COLUNA_QTDE_ACERTO + " INTEGER," +
                                                         "" + COLUNA_NIVEL + " INTEGER," +
                                                         "" + COLUNA_ID_LOTERIA + " INTEGER," +
-                                                        "FOREIGN KEY(" + COLUNA_ID_LOTERIA + ") REFERENCES " + TABELA_LOTERIA + "(" + COLUNA_ID + "))";
+                                                        "FOREIGN KEY(" + COLUNA_ID_LOTERIA + ")  REFERENCES " + TABELA_LOTERIA + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_JOGO = "CREATE TABLE " + TABELA_JOGO + "(" +
                                                         "" + COLUNA_ID + " INTEGER PRIMARY KEY," +
