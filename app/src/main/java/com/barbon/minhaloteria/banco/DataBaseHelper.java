@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.barbon.minhaloteria.modelo.Loteria;
+
 /**
  * Created by Barbon on 03/03/2015.
  */
@@ -96,6 +98,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                             "" + COLUNA_ID_SORTEIO + " INTEGER," +
                                                             "" + COLUNA_ID_PREMIO + " INTEGER," +
                                                             "" + COLUNA_QTDE_ACERTO + " INTEGER," +
+                                                            "PRIMARY KEY (" + COLUNA_ID_JOGOCONCURSO + ", " + COLUNA_ID_SORTEIO + "), " +
                                                             "FOREIGN KEY (" + COLUNA_ID_JOGOCONCURSO + ") REFERENCES " + TABELA_JOGOCONSURSO + "(" + COLUNA_ID + ")," +
                                                             "FOREIGN KEY (" + COLUNA_ID_SORTEIO + ") REFERENCES " + TABELA_SORTEIO + "(" + COLUNA_ID + ")," +
                                                             "FOREIGN KEY (" + COLUNA_ID_PREMIO + ") REFERENCES " + TABELA_PREMIO + "(" + COLUNA_ID + "))";

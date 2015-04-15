@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.barbon.minhaloteria.banco.LoteriaDAO;
+
 
 public class PrincipalActivity extends ActionBarActivity {
 
@@ -12,6 +14,8 @@ public class PrincipalActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+        LoteriaDAO loteriaDAO = new LoteriaDAO(this);
     }
 
 
