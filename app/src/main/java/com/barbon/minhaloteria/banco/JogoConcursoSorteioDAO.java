@@ -2,8 +2,12 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 
+import com.barbon.minhaloteria.modelo.JogoConcurso;
 import com.barbon.minhaloteria.modelo.JogoConcursoSorteio;
+
+import java.sql.SQLException;
 
 /**
  * Created by Barbon on 18/03/2015.
@@ -16,46 +20,62 @@ public class JogoConcursoSorteioDAO extends DbDAO {
         super(context);
     }
 
-    public long salvar(JogoConcursoSorteio jogo){
+    public long salvar(JogoConcursoSorteio jogoConcursoSorteio){
 
-        long id = jogo.getId();
+        long i = 0;
 
-        if (id != 0)
-            atualizar(jogo);
-        else
-            id = inserir(jogo);
+        try{
+            i = inserir(jogoConcursoSorteio);
+        }
+        catch (SQLiteConstraintException e){
+            i = atualizar(jogoConcursoSorteio);
+        }
+        catch (SQLException e){
+            i = -1;
+        }
 
-        return id;
+        return i;
     }
 
-    public long inserir(Jogo jogo){
+    public long inserir(JogoConcursoSorteio jogoConcursoSorteio) throws SQLException{
         ContentValues values = new ContentValues();
 
-        values.put(Jogo.Jogos.DESCRICAO, jogo.getDescricao());
-        values.put(Jogo.Jogos.JOGO_PERMANENTE, (jogo.isJogoPermanente()) ? 1:0);
-        values.put(Jogo.Jogos.ID_LOTERIA, jogo.getLoteria().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.ID_JOGOCONCURSO, jogoConcursoSorteio.getJogoConcurso().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.ID_SORTEIO, jogoConcursoSorteio.getSorteio().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.ID_PREMIO, jogoConcursoSorteio.getPremio().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.QTDE_ACERTO, jogoConcursoSorteio.getQtdeAcerto());
 
-        return inserir(NOME_TABELA, values);
+        return inserirOrThrow(NOME_TABELA, values);
     }
 
-    public int atualizar(Jogo jogo){
+    public long inserirOrThrow(String tabela, ContentValues values) throws SQLException {
+
+        return database.insertOrThrow(tabela, "", values);
+
+    }
+
+    public int atualizar(JogoConcursoSorteio jogoConcursoSorteio){
         ContentValues values = new ContentValues();
 
-        values.put(Jogo.Jogos.DESCRICAO, jogo.getDescricao());
-        values.put(Jogo.Jogos.JOGO_PERMANENTE, (jogo.isJogoPermanente()) ? 1:0);
-        values.put(Jogo.Jogos.ID_LOTERIA, jogo.getLoteria().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.ID_PREMIO, jogoConcursoSorteio.getPremio().getId());
+        values.put(JogoConcursoSorteio.JogosConcursosSorteios.QTDE_ACERTO, jogoConcursoSorteio.getQtdeAcerto());
 
-        String _id = String.valueOf(jogo.getId());
-        String where = Jogo.Jogos._ID + "=?";
-        String[] whereArgs = new String[]{_id};
+        String idJogoConcurso = String.valueOf(jogoConcursoSorteio.getJogoConcurso().getId());
+        String idSorteio = String.valueOf(jogoConcursoSorteio.getSorteio().getId());
+        String where = JogoConcursoSorteio.JogosConcursosSorteios.ID_JOGOCONCURSO + "=? and " +
+                       JogoConcursoSorteio.JogosConcursosSorteios.ID_SORTEIO + "=?";
+        String[] whereArgs = new String[]{idJogoConcurso, idSorteio};
 
         return atualizar(NOME_TABELA, values, where, whereArgs);
     }
 
-    public int deletar(long id){
-        String where = Jogo.Jogos._ID + "=?";
-        String _id = String.valueOf(id);
-        String[] whereArgs = new String[]{_id};
+    public int deletar(long idJogoConcurso, long idSorteio){
+
+        String _idJogoConcurso = String.valueOf(idJogoConcurso);
+        String _idSorteio = String.valueOf(idSorteio);
+        String where = JogoConcursoSorteio.JogosConcursosSorteios.ID_JOGOCONCURSO + "=? and " +
+                JogoConcursoSorteio.JogosConcursosSorteios.ID_SORTEIO + "=?";
+        String[] whereArgs = new String[]{_idJogoConcurso, _idSorteio};
 
         return deletar(NOME_TABELA, where, whereArgs);
     }
