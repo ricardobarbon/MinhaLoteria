@@ -137,6 +137,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CRIA_TABELA_NUMEROSORTEADO);
         db.execSQL(CRIA_TABELA_JOGOCONCURSO);
         db.execSQL(CRIA_TABELA_JOGOCONCURSOSORTEIO);
+
+
     }
 
     @Override

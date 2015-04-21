@@ -15,7 +15,8 @@ public class PrincipalActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        LoteriaDAO loteriaDAO = new LoteriaDAO(this);
+        App.setContext(this);
+
     }
 
 
