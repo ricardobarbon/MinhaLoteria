@@ -49,4 +49,8 @@ public class DbDAO {
         int count = database.delete(tabela, where, whereArgs);
         return count;
     }
+
+    protected Context getmContext(){
+        return mContext;
+    }
 }

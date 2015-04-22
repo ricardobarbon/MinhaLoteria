@@ -3,8 +3,10 @@ package com.barbon.minhaloteria.banco;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.barbon.minhaloteria.modelo.Loteria;
+import com.barbon.minhaloteria.modelo.Premio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,39 @@ public class LoteriaDAO extends DbDAO {
         super(context);
     }
 
-    public long salvar(Loteria loteria){
+    public long salvarLoteria(Loteria loteria){
+        long id = 0;
+        PremioDAO premioDAO = new PremioDAO(getmContext());
+        long backupId = loteria.getId();
+
+        database.beginTransaction();
+
+        try{
+            id = salvar(loteria);
+
+            loteria.setId(id);
+
+            for (Premio p: loteria.getPremios()){
+                p.setLoteria(loteria);
+                p.setId(premioDAO.salvar(p));
+            }
+            database.setTransactionSuccessful();
+        }
+        catch (Exception e){
+
+            loteria.setId(backupId);
+
+            Log.e(getmContext().getApplicationInfo().name, "Erro inserir loteria ---> " + e.getMessage());
+
+        }
+        finally {
+            database.endTransaction();
+        }
+
+        return id;
+    }
+
+    private long salvar(Loteria loteria){
 
         long id = loteria.getId();
 

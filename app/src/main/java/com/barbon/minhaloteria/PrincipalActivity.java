@@ -4,21 +4,46 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.barbon.minhaloteria.banco.LoteriaDAO;
+import com.barbon.minhaloteria.controle.LoteriaControle;
+import com.barbon.minhaloteria.modelo.Loteria;
 
 
 public class PrincipalActivity extends ActionBarActivity {
+
+    TextView t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        App.setContext(this);
+        LoteriaControle loteriaControle = LoteriaControle.getInstance(this);
 
+        loteriaControle.criarLoterias(this);
+
+        t = (TextView)findViewById(R.id.texto);
+
+        //t.setText(loteriaControle.getLoterias().size());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String s = "";
+        LoteriaDAO loteriaDAO = new LoteriaDAO(this);
+
+        for (Loteria l: loteriaDAO.listarLoterias()){
+            s = s + l.getDescricao() + ";";
+        }
+
+        t.setText(s);
+
+        Toast.makeText(this, "teste", Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

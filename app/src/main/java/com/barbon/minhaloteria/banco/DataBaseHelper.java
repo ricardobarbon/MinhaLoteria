@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.barbon.minhaloteria.controle.LoteriaControle;
 import com.barbon.minhaloteria.modelo.Loteria;
 
 /**
@@ -104,6 +105,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                             "FOREIGN KEY (" + COLUNA_ID_SORTEIO + ") REFERENCES " + TABELA_SORTEIO + "(" + COLUNA_ID + ")," +
                                                             "FOREIGN KEY (" + COLUNA_ID_PREMIO + ") REFERENCES " + TABELA_PREMIO + "(" + COLUNA_ID + "))";
 
+    private Context mContext;
     private static DataBaseHelper instance;
 
     public static synchronized DataBaseHelper getHelper(Context context){
@@ -116,6 +118,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private DataBaseHelper(Context context){
         super(context, NOME_BANCO, null, VERSAO_BANCO);
+        mContext = context;
     }
 
     @Override
@@ -138,7 +141,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CRIA_TABELA_JOGOCONCURSO);
         db.execSQL(CRIA_TABELA_JOGOCONCURSOSORTEIO);
 
+        Log.i("BANCO","Criou o banco de dados");
+        /*
+        LoteriaControle loteriaControle = LoteriaControle.getInstance(mContext);
 
+        loteriaControle.criarLoterias(mContext);
+
+        Log.i("BANCO","Criou loterias");*/
     }
 
     @Override
