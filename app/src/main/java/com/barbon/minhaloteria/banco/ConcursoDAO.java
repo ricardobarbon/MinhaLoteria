@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.util.Log;
 
 import com.barbon.minhaloteria.modelo.Concurso;
+import com.barbon.minhaloteria.modelo.Loteria;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,22 @@ import java.util.List;
 public class ConcursoDAO extends DbDAO {
 
     public static final String NOME_TABELA = DataBaseHelper.TABELA_CONCURSO;
+
+    public static final String QUERY_ULTIMO_CONCURSO_COM_SORTEIO =
+            "SELECT C." + DataBaseHelper.COLUNA_ID + " " +
+            "FROM " + DataBaseHelper.TABELA_LOTERIA + " L " +
+            "INNER JOIN " + DataBaseHelper.TABELA_CONCURSO + " C " +
+                "ON L." + DataBaseHelper.COLUNA_ID + " = C." + DataBaseHelper.COLUNA_ID_LOTERIA + " " +
+            "INNER JOIN " +DataBaseHelper.TABELA_SORTEIO + " S " +
+                 "ON C." + DataBaseHelper.COLUNA_ID + " = C." + DataBaseHelper.COLUNA_ID_CONCURSO + " " +
+            "WHERE L." + DataBaseHelper.COLUNA_ID + " = ? " +
+            "ORDER BY C." + DataBaseHelper.COLUNA_NUMERO + " DESC LIMIT 1";
+
+    public static final String QUERY_ULTIMO_CONCURSO =
+            "SELECT " + DataBaseHelper.COLUNA_ID + " " +
+            "FROM " + DataBaseHelper.TABELA_CONCURSO + " " +
+            "WHERE " + DataBaseHelper.COLUNA_ID_LOTERIA + " = ? " +
+            "ORDER BY " + DataBaseHelper.COLUNA_NUMERO + " DESC LIMIT 1";
 
     public ConcursoDAO(Context context){
         super(context);
@@ -35,7 +52,7 @@ public class ConcursoDAO extends DbDAO {
         return id;
     }
 
-    public long inserir(Concurso concurso){
+    private long inserir(Concurso concurso){
         ContentValues values = new ContentValues();
 
         values.put(Concurso.Concursos.NUMERO, concurso.getNumero());
@@ -45,7 +62,7 @@ public class ConcursoDAO extends DbDAO {
         return inserir(NOME_TABELA, values);
     }
 
-    public int atualizar(Concurso concurso){
+    private int atualizar(Concurso concurso){
         ContentValues values = new ContentValues();
 
         values.put(Concurso.Concursos.NUMERO, concurso.getNumero());
@@ -109,5 +126,31 @@ public class ConcursoDAO extends DbDAO {
         }
 
         return concursos;
+    }
+
+    public Concurso ultimoConcursoComSorteio(Loteria loteria){
+
+        String[] w = {loteria.getId() + ""};
+
+        Cursor c = database.rawQuery(QUERY_ULTIMO_CONCURSO_COM_SORTEIO, w);
+
+        if (c.moveToFirst()){
+            return buscarConcurso(c.getLong(0));
+        }
+
+        return null;
+    }
+
+    public Concurso ultimoConcurso(Loteria loteria){
+
+        String[] w = {loteria.getId() + ""};
+
+        Cursor c = database.rawQuery(QUERY_ULTIMO_CONCURSO, w);
+
+        if (c.moveToFirst()){
+            return buscarConcurso(c.getLong(0));
+        }
+
+        return null;
     }
 }

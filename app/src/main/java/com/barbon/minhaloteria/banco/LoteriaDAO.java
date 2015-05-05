@@ -35,7 +35,6 @@ public class LoteriaDAO extends DbDAO {
             loteria.setId(id);
 
             for (Premio p: loteria.getPremios()){
-                p.setLoteria(loteria);
                 p.setId(premioDAO.salvar(p));
             }
             database.setTransactionSuccessful();

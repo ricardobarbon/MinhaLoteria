@@ -1,7 +1,6 @@
 package com.barbon.minhaloteria.controle;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.barbon.minhaloteria.banco.LoteriaDAO;
 import com.barbon.minhaloteria.modelo.Loteria;
@@ -19,36 +18,31 @@ public class LoteriaControle {
     public static final String MEGASENA = "MEGA-SENA";
     public static final String QUINA = "QUINA";
 
+    public static  final int LOTOFACIL_PROXIMOS_CONCURSOS = 12;
+    public static  final int MEGASENA_PROXIMOS_CONCURSOS = 8;
+    public static  final int QUINA_PROXIMOS_CONCURSOS = 24;
+
     private static LoteriaControle instance;
 
-    private List<Loteria> loterias;
+    private LoteriaControle(){
 
-    private LoteriaControle(Context context){
-        LoteriaDAO loteriaDAO = new LoteriaDAO(context);
-
-        loterias = loteriaDAO.listarLoterias();
     }
 
-    public static LoteriaControle getInstance(Context context){
+    public static LoteriaControle getInstance(){
 
         if (instance == null)
-            instance = new LoteriaControle(context);
+            instance = new LoteriaControle();
 
         return instance;
-    }
-
-    public List<Loteria> getLoterias() {
-        return loterias;
-    }
-
-    public void setLoterias(List<Loteria> loterias) {
-        this.loterias = loterias;
     }
 
     public void criarLoterias(Context context){
 
         Loteria l;
         DescricaoComparator comp = new DescricaoComparator();
+        LoteriaDAO loteriaDAO = new LoteriaDAO(context);
+
+        List<Loteria> loterias = loteriaDAO.listarLoterias();
 
         l = criarLoteria(LOTOFACIL, 18, 15);
 
@@ -100,6 +94,20 @@ public class LoteriaControle {
 
         loteriaDAO.salvarLoteria(l);
 
+    }
+
+    public int quantProximosConcursos(Loteria loteria){
+
+        switch (loteria.getDescricao()){
+            case LOTOFACIL:
+                return LOTOFACIL_PROXIMOS_CONCURSOS;
+            case QUINA:
+                return QUINA_PROXIMOS_CONCURSOS;
+            case MEGASENA:
+                return MEGASENA_PROXIMOS_CONCURSOS;
+            default:
+                throw new IllegalArgumentException("Loteria inválida...");
+        }
     }
 
     public class DescricaoComparator implements Comparator<Loteria>{

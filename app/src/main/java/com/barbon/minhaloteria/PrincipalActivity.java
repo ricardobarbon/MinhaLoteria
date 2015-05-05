@@ -1,5 +1,8 @@
 package com.barbon.minhaloteria;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,41 +11,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.barbon.minhaloteria.banco.LoteriaDAO;
+import com.barbon.minhaloteria.controle.ConcursoControle;
 import com.barbon.minhaloteria.controle.LoteriaControle;
+import com.barbon.minhaloteria.controle.SorteioControle;
 import com.barbon.minhaloteria.modelo.Loteria;
+import com.barbon.minhaloteria.modelo.Premio;
+import com.barbon.minhaloteria.util.Internet;
+import com.barbon.minhaloteria.util.WebService;
 
 
 public class PrincipalActivity extends ActionBarActivity {
 
+    private ProgressDialog dialog;
     TextView t;
+    LoteriaControle loteriaControle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        LoteriaControle loteriaControle = LoteriaControle.getInstance(this);
-
-        loteriaControle.criarLoterias(this);
-
-        t = (TextView)findViewById(R.id.texto);
-
-        //t.setText(loteriaControle.getLoterias().size());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String s = "";
-        LoteriaDAO loteriaDAO = new LoteriaDAO(this);
-
-        for (Loteria l: loteriaDAO.listarLoterias()){
-            s = s + l.getDescricao() + ";";
-        }
-
-        t.setText(s);
-
-        Toast.makeText(this, "teste", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -65,5 +53,59 @@ public class PrincipalActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class Inicializador extends AsyncTask<Void, String ,Void >{
+
+        Context context;
+
+        private Inicializador(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(context, "Inicializando...", "Inicializando..", true, true);
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            publishProgress("Verificando cadastro de loterias...");
+            loteriaControle = LoteriaControle.getInstance();
+            loteriaControle.criarLoterias(context);
+
+            if (!Internet.existeConexao(context)) {
+
+                Toast.makeText(context, "Sem internet...", Toast.LENGTH_LONG);
+
+            }
+            else{
+
+                ConcursoControle.getInstance().;
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            dialog.dismiss();
+
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+
+            dialog.setMessage(values[0]);
+
+        }
     }
 }

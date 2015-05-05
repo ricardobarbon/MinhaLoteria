@@ -61,6 +61,10 @@ public class Loteria {
 
     public void setPremios(List<Premio> premios) {
         this.premios = premios;
+
+        for (Premio p: this.premios){
+            p.setLoteria(this);
+        }
     }
 
     /**
