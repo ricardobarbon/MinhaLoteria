@@ -14,10 +14,13 @@ import com.barbon.minhaloteria.banco.LoteriaDAO;
 import com.barbon.minhaloteria.controle.ConcursoControle;
 import com.barbon.minhaloteria.controle.LoteriaControle;
 import com.barbon.minhaloteria.controle.SorteioControle;
+import com.barbon.minhaloteria.modelo.Concurso;
 import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.Premio;
 import com.barbon.minhaloteria.util.Internet;
 import com.barbon.minhaloteria.util.WebService;
+
+import java.util.logging.Handler;
 
 
 public class PrincipalActivity extends ActionBarActivity {
@@ -25,12 +28,17 @@ public class PrincipalActivity extends ActionBarActivity {
     private ProgressDialog dialog;
     TextView t;
     LoteriaControle loteriaControle;
+    Concurso concurso;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
+        t = (TextView)findViewById(R.id.texto);
+
+        new Inicializador(this).execute();
     }
 
     @Override
@@ -55,7 +63,7 @@ public class PrincipalActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Inicializador extends AsyncTask<Void, String ,Void >{
+    private class Inicializador extends AsyncTask<Void, String ,String >{
 
         Context context;
 
@@ -72,7 +80,7 @@ public class PrincipalActivity extends ActionBarActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
 
             publishProgress("Verificando cadastro de loterias...");
             loteriaControle = LoteriaControle.getInstance();
@@ -80,23 +88,34 @@ public class PrincipalActivity extends ActionBarActivity {
 
             if (!Internet.existeConexao(context)) {
 
-                Toast.makeText(context, "Sem internet...", Toast.LENGTH_LONG);
+                return "Sem Internet...";
 
             }
             else{
 
-                ConcursoControle.getInstance().;
+                ConcursoControle concursoControle = ConcursoControle.getInstance();
+                Loteria loteria = new Loteria();
+
+                loteria.setDescricao(LoteriaControle.LOTOFACIL);
+
+                concurso = concursoControle.getUltimoConcursoW(loteria);
 
             }
 
-            return null;
+            return "";
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
 
             dialog.dismiss();
+
+            if (aVoid != "")
+                Toast.makeText(context, aVoid, Toast.LENGTH_LONG).show();
+
+            if (concurso!=null)
+                t.setText("Concurso: " + concurso.getNumero());
 
         }
 

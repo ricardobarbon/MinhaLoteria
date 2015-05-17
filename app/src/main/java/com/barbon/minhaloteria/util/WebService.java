@@ -84,6 +84,20 @@ public class WebService {
 
         }
 
-        return l;
+        return retirarParenteses(l);
+    }
+
+    private String retirarParenteses(String s){
+
+        if (s.toUpperCase().contains("\"CONCURSO\"")){
+            s = s.trim();
+            s = s.substring(1);
+            s = s.substring(0, s.length() - 1);
+
+            return s;
+        }
+        else
+            return s;
+
     }
 }

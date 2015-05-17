@@ -1,14 +1,16 @@
 package com.barbon.minhaloteria.controle;
 
-import android.content.Context;
+import android.util.Log;
 
-import com.barbon.minhaloteria.banco.ConcursoDAO;
-import com.barbon.minhaloteria.banco.LoteriaDAO;
 import com.barbon.minhaloteria.modelo.Concurso;
 import com.barbon.minhaloteria.modelo.Loteria;
+import com.barbon.minhaloteria.modelo.NumeroSorteado;
+import com.barbon.minhaloteria.modelo.Sorteio;
+import com.barbon.minhaloteria.util.ConcursoWebService;
 import com.barbon.minhaloteria.util.WebService;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class ConcursoControle {
 
     private static ConcursoControle instance;
+    private static final Gson gson = new Gson();
 
     private ConcursoControle(){
 
@@ -31,29 +34,44 @@ public class ConcursoControle {
         return instance;
     }
 
-    public void sincroniza(Context context){
+    public Concurso getUltimoConcursoW(Loteria loteria){
 
-        LoteriaDAO loteriaDAO = new LoteriaDAO(context);
+        String resp = "";
 
-        List<Loteria> loterias = loteriaDAO.listarLoterias();
+        resp = getUltimoConcursoWebService(loteria);
 
-        for (Loteria l: loterias){
+        if (isJSONValid(resp))
+            return concursoWebServiceParaConcurso(resp);
+        else
+            return null;
 
-        }
+    }
+
+    public Concurso getPorConcursoW(Concurso concurso){
+
+        String resp = "";
+
+        resp = getPorConcursoWebService(concurso);
+
+        if (isJSONValid(resp))
+            return concursoWebServiceParaConcurso(resp);
+        else
+            return null;
+
     }
 
     /**************************************************
      * WEB SERVICE
      **************************************************/
 
-    public String getSorteiosHoje(){
+    private String getSorteiosHojeWebService(){
 
         WebService w = WebService.getInstance();
 
         return w.requisicao(WebService.GET_SORTEIOS_HOJE);
     }
 
-    public String getUltimoConcurso(Loteria loteria){
+    private String getUltimoConcursoWebService(Loteria loteria){
 
         WebService w = WebService.getInstance();
         String url = "";
@@ -75,7 +93,7 @@ public class ConcursoControle {
         return w.requisicao(url);
     }
 
-    public String getPorConcurso(Concurso concurso){
+    private String getPorConcursoWebService(Concurso concurso){
 
         WebService w = WebService.getInstance();
         String url = "";
@@ -97,12 +115,58 @@ public class ConcursoControle {
         return w.requisicao(url + concurso.getNumero());
     }
 
-    private class ConcursoWebService{
-        @SerializedName("Concurso")
-        int concurso;
-        @SerializedName("Data")
-        Date data;
-        @SerializedName("Dezenas")
-        List<Integer> dezenas;
+    private static boolean isJSONValid(String JSON_STRING) {
+
+        //return JSON_STRING.toUpperCase().contains("\"CONCURSO\"");
+        try {
+            gson.fromJson(JSON_STRING, Object.class);
+            return true;
+        } catch(com.google.gson.JsonSyntaxException ex) {
+            return false;
+        }
+    }
+
+    private Concurso concursoWebServiceParaConcurso(String json){
+
+        ConcursoWebService c = new ConcursoWebService();
+        Concurso concurso = new Concurso();
+        List<Sorteio> sorteios = new ArrayList<>();
+        Sorteio sorteio = new Sorteio();
+
+        sorteios.add(sorteio);
+
+        c = gson.fromJson(json, ConcursoWebService.class);
+
+        concurso.setNumero(c.concurso);
+        concurso.setData(stringParaDate(c.data));
+        concurso.setSorteios(sorteios);
+
+        sorteio.setNumeroSorteio(1);
+        sorteio.setConcurso(concurso);
+        sorteio.setNumerosSorteados(recuperaNumerosSorteados(sorteio, c.dezenas));
+
+        return concurso;
+    }
+
+    private Date stringParaDate(String data){
+
+        return new Date(Long.parseLong(data.replaceAll("[^0-9]", "")));
+
+    }
+
+    private List<NumeroSorteado> recuperaNumerosSorteados(Sorteio sorteio, String numeros){
+
+        List<NumeroSorteado> numeroSorteados = new ArrayList<>();
+        String[] numeros2 = numeros.split("\\|");
+
+        for (String n: numeros2 ){
+            NumeroSorteado ns = new NumeroSorteado();
+
+            ns.setSorteio(sorteio);
+            ns.setNumero(Byte.parseByte(n));
+            numeroSorteados.add(ns);
+        }
+
+        return numeroSorteados;
     }
 }
