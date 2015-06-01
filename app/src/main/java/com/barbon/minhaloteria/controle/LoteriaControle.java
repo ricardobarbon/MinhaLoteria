@@ -3,6 +3,8 @@ package com.barbon.minhaloteria.controle;
 import android.content.Context;
 
 import com.barbon.minhaloteria.banco.LoteriaDAO;
+import com.barbon.minhaloteria.banco.PremioDAO;
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.Loteria;
 
 import java.util.Collections;
@@ -23,6 +25,7 @@ public class LoteriaControle {
     public static  final int QUINA_PROXIMOS_CONCURSOS = 24;
 
     private static LoteriaControle instance;
+    private static List<Loteria> loterias;
 
     private LoteriaControle(){
 
@@ -34,6 +37,13 @@ public class LoteriaControle {
             instance = new LoteriaControle();
 
         return instance;
+    }
+
+    public static List<Loteria> getLoterias(Context context){
+        if (loterias == null)
+            loterias = getInstance().todasLoterias(context);
+
+        return loterias;
     }
 
     public void criarLoterias(Context context){
@@ -110,11 +120,56 @@ public class LoteriaControle {
         }
     }
 
+    private List<Loteria> todasLoterias(Context context){
+
+        LoteriaDAO loteriaDAO = new LoteriaDAO(context);
+        PremioDAO premioDAO = new PremioDAO(context);
+
+        List<Loteria> loterias;
+
+        loterias = loteriaDAO.listarLoterias();
+
+        for (Loteria l: loterias){
+            l.setPremios(premioDAO.listarPremiosPorLoteria(l));
+        }
+
+        return loterias;
+    }
+
+    public void definirLoteria(List<Loteria> loterias, Loteria loteria){
+        int index;
+
+        IdComparator idComparator = new IdComparator();
+
+        Collections.sort(loterias, idComparator);
+
+        index = Collections.binarySearch(loterias, loteria, idComparator);
+
+        if (index >= 0)
+            loteria = loterias.get(index);
+        else
+            loteria = null;
+    }
+
     public class DescricaoComparator implements Comparator<Loteria>{
 
         @Override
         public int compare(Loteria loteria, Loteria outraLoteria) {
             return loteria.getDescricao().compareTo(outraLoteria.getDescricao());
+        }
+    }
+
+    public class IdComparator implements Comparator<Loteria>{
+
+        @Override
+        public int compare(Loteria loteria, Loteria outraLoteria) {
+
+            if (loteria.getId() > outraLoteria.getId())
+                return 1;
+            else if (loteria.getId() < outraLoteria.getId())
+                return -1;
+            else
+                return 0;
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.barbon.minhaloteria.modelo.Jogo;
+import com.barbon.minhaloteria.modelo.Loteria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,14 +94,19 @@ public class JogoDAO extends DbDAO {
             int idxId = c.getColumnIndex(Jogo.Jogos._ID);
             int idxDescricao = c.getColumnIndex(Jogo.Jogos.DESCRICAO);
             int idxJogoPermanente = c.getColumnIndex(Jogo.Jogos.JOGO_PERMANENTE);
+            int idxIdLoteria = c.getColumnIndex(Jogo.Jogos.ID_LOTERIA);
 
             do{
                 Jogo j = new Jogo();
+                Loteria l = new Loteria();
+                j.setLoteria(l);
+
                 jogos.add(j);
 
                 j.setId(c.getLong(idxId));
                 j.setDescricao(c.getString(idxDescricao));
                 j.setJogoPermanente(c.getLong(idxJogoPermanente)!=0);
+                l.setId(c.getLong(idxIdLoteria));
 
             }while (c.moveToNext());
         }

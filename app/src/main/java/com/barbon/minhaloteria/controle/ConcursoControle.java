@@ -20,7 +20,7 @@ import java.util.List;
 public class ConcursoControle {
 
     private static ConcursoControle instance;
-    private static final Gson gson = new Gson();
+    private static Gson gson;
 
     private ConcursoControle(){
 
@@ -34,9 +34,18 @@ public class ConcursoControle {
         return instance;
     }
 
+    public void inicializeGson(){
+
+        if (gson == null){
+            gson = new Gson();
+        }
+    }
+
     public Concurso getUltimoConcursoW(Loteria loteria){
 
         String resp = "";
+
+        inicializeGson();
 
         resp = getUltimoConcursoWebService(loteria);
 
@@ -50,6 +59,8 @@ public class ConcursoControle {
     public Concurso getPorConcursoW(Concurso concurso){
 
         String resp = "";
+
+        inicializeGson();
 
         resp = getPorConcursoWebService(concurso);
 
@@ -118,6 +129,7 @@ public class ConcursoControle {
     private static boolean isJSONValid(String JSON_STRING) {
 
         //return JSON_STRING.toUpperCase().contains("\"CONCURSO\"");
+
         try {
             gson.fromJson(JSON_STRING, Object.class);
             return true;

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.Premio;
 
 import java.util.ArrayList;
@@ -101,6 +102,33 @@ public class PremioDAO extends DbDAO {
                 p.setId(c.getLong(idxId));
                 p.setQtdeAcerto((byte)c.getInt(idxQtdeAcerto));
                 p.setNivel((byte)c.getInt(idxNivel));
+
+            }while (c.moveToNext());
+        }
+
+        return premios;
+    }
+
+    public List<Premio> listarPremiosPorLoteria(Loteria loteria){
+
+        Cursor c = database.query(NOME_TABELA, Premio.colunas, Premio.Premios.ID_LOTERIA + " = " + loteria.getId(), null, null, null, null, null);
+
+        List<Premio> premios = new ArrayList<Premio>();
+
+        if (c.moveToFirst()){
+
+            int idxId = c.getColumnIndex(Premio.Premios._ID);
+            int idxQtdeAcerto = c.getColumnIndex(Premio.Premios.QTDE_ACERTO);
+            int idxNivel = c.getColumnIndex(Premio.Premios.NIVEL);
+
+            do{
+                Premio p = new Premio();
+                premios.add(p);
+
+                p.setId(c.getLong(idxId));
+                p.setQtdeAcerto((byte)c.getInt(idxQtdeAcerto));
+                p.setNivel((byte)c.getInt(idxNivel));
+                p.setLoteria(loteria);
 
             }while (c.moveToNext());
         }

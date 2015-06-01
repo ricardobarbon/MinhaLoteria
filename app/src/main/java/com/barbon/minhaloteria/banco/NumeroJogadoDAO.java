@@ -2,8 +2,13 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.NumeroJogado;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Barbon on 18/03/2015.
@@ -56,6 +61,32 @@ public class NumeroJogadoDAO extends DbDAO {
         String[] whereArgs = new String[]{_id};
 
         return deletar(NOME_TABELA, where, whereArgs);
+    }
+
+    public List<NumeroJogado> buscarNumeros(Jogo jogo){
+
+        Cursor c = database.query(NOME_TABELA, NumeroJogado.colunas, NumeroJogado.NumerosJogados.ID_JOGO + " = " + jogo.getId(),
+                                  null, null, null, NumeroJogado.NumerosJogados.NUMERO, null);
+
+        List<NumeroJogado> numeroJogados = new ArrayList<NumeroJogado>();
+
+        if (c.moveToFirst()){
+
+            int idxId = c.getColumnIndex(NumeroJogado.NumerosJogados._ID);
+            int idxNumero = c.getColumnIndex(NumeroJogado.NumerosJogados.NUMERO);
+
+            do{
+                NumeroJogado n = new NumeroJogado();
+                numeroJogados.add(n);
+
+                n.setId(c.getLong(idxId));
+                n.setNumero((byte)c.getInt(idxNumero));
+                n.setJogo(jogo);
+
+            }while (c.moveToNext());
+        }
+
+        return numeroJogados;
     }
 
 }

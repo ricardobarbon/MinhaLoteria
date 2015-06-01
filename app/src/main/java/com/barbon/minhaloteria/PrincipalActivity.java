@@ -1,45 +1,47 @@
 package com.barbon.minhaloteria;
 
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.barbon.minhaloteria.banco.LoteriaDAO;
 import com.barbon.minhaloteria.controle.ConcursoControle;
+import com.barbon.minhaloteria.controle.JogoControle;
 import com.barbon.minhaloteria.controle.LoteriaControle;
 import com.barbon.minhaloteria.controle.SorteioControle;
 import com.barbon.minhaloteria.modelo.Concurso;
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.Premio;
 import com.barbon.minhaloteria.util.Internet;
 import com.barbon.minhaloteria.util.WebService;
+import com.barbon.minhaloteria.visao.JogoPrincipal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Handler;
 
 
 public class PrincipalActivity extends ActionBarActivity {
 
-    private ProgressDialog dialog;
-    TextView t;
-    LoteriaControle loteriaControle;
-    Concurso concurso;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_principal);
+        setContentView(R.layout.jogos_detalhes);
 
-        t = (TextView)findViewById(R.id.texto);
 
-        new Inicializador(this).execute();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,6 +63,21 @@ public class PrincipalActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private List<JogoPrincipal> buscarJogos(){
+
+        JogoControle jogoControle = JogoControle.getInstance();
+
+        List<Jogo> jogos = jogoControle.todosJogos(this);
+
+        List<JogoPrincipal> jogoPrincipals = new ArrayList<JogoPrincipal>();
+
+        for (Jogo j: jogos){
+            jogoPrincipals.add(new JogoPrincipal(this, j));
+        }
+
+        return jogoPrincipals;
     }
 
     private class Inicializador extends AsyncTask<Void, String ,String >{
@@ -86,21 +103,7 @@ public class PrincipalActivity extends ActionBarActivity {
             loteriaControle = LoteriaControle.getInstance();
             loteriaControle.criarLoterias(context);
 
-            if (!Internet.existeConexao(context)) {
 
-                return "Sem Internet...";
-
-            }
-            else{
-
-                ConcursoControle concursoControle = ConcursoControle.getInstance();
-                Loteria loteria = new Loteria();
-
-                loteria.setDescricao(LoteriaControle.LOTOFACIL);
-
-                concurso = concursoControle.getUltimoConcursoW(loteria);
-
-            }
 
             return "";
         }
@@ -111,11 +114,7 @@ public class PrincipalActivity extends ActionBarActivity {
 
             dialog.dismiss();
 
-            if (aVoid != "")
-                Toast.makeText(context, aVoid, Toast.LENGTH_LONG).show();
 
-            if (concurso!=null)
-                t.setText("Concurso: " + concurso.getNumero());
 
         }
 
