@@ -1,8 +1,11 @@
 package com.barbon.minhaloteria.controle;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.barbon.minhaloteria.banco.ConcursoDAO;
 import com.barbon.minhaloteria.modelo.Concurso;
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.NumeroSorteado;
 import com.barbon.minhaloteria.modelo.Sorteio;
@@ -68,6 +71,22 @@ public class ConcursoControle {
             return concursoWebServiceParaConcurso(resp);
         else
             return null;
+
+    }
+
+    public Concurso getUltimoConcursoSorteio(Context context, Jogo jogo){
+
+        ConcursoDAO concursoDAO = new ConcursoDAO(context);
+
+        return concursoDAO.ultimoConcursoComSorteio(jogo);
+
+    }
+
+    public Concurso getUltimoConcurso(Context context, Jogo jogo){
+
+        ConcursoDAO concursoDAO = new ConcursoDAO(context);
+
+        return concursoDAO.ultimoConcurso(jogo);
 
     }
 

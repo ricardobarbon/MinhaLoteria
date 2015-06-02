@@ -57,4 +57,6 @@ public class JogoConcursoDAO extends DbDAO {
 
         return deletar(NOME_TABELA, where, whereArgs);
     }
+
+
 }

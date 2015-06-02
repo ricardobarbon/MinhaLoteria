@@ -37,11 +37,14 @@ public class PrincipalActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.jogos_detalhes);
+
+        List<JogoPrincipal> jogos =  buscarJogos();
+
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,50 +83,5 @@ public class PrincipalActivity extends ActionBarActivity {
         return jogoPrincipals;
     }
 
-    private class Inicializador extends AsyncTask<Void, String ,String >{
 
-        Context context;
-
-        private Inicializador(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = ProgressDialog.show(context, "Inicializando...", "Inicializando..", true, true);
-
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            publishProgress("Verificando cadastro de loterias...");
-            loteriaControle = LoteriaControle.getInstance();
-            loteriaControle.criarLoterias(context);
-
-
-
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(String aVoid) {
-            super.onPostExecute(aVoid);
-
-            dialog.dismiss();
-
-
-
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-
-            dialog.setMessage(values[0]);
-
-        }
-    }
 }

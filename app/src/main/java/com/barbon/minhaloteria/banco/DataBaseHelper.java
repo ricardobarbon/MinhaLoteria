@@ -61,12 +61,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                         "" + COLUNA_DESCRICAO + " TEXT," +
                                                         "" + COLUNA_JOGO_PERMANENTE + " INTEGER," +
                                                         "" + COLUNA_ID_LOTERIA + " INTEGER," +
+                                                        "UNIQUE (" + COLUNA_DESCRICAO + ")," +
                                                         "FOREIGN KEY(" + COLUNA_ID_LOTERIA + ") REFERENCES " + TABELA_LOTERIA + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_NUMEROJOGADO = "CREATE TABLE " + TABELA_NUMEROJOGADO + "(" +
                                                             "" + COLUNA_ID + " INTEGER PRIMARY KEY," +
                                                             "" + COLUNA_NUMERO + " INTEGER," +
                                                             "" + COLUNA_ID_JOGO + " INTEGER," +
+                                                            "UNIQUE (" + COLUNA_NUMERO + ", " + COLUNA_ID_JOGO + "), " +
                                                             "FOREIGN KEY (" + COLUNA_ID_JOGO + ") REFERENCES " + TABELA_JOGO + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_CONSURSO = "CREATE TABLE " + TABELA_CONCURSO + "(" +
@@ -74,24 +76,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                         "" + COLUNA_NUMERO + " INTEGER," +
                                                         "" + COLUNA_DATA + " INTEGER," +
                                                         "" + COLUNA_ID_LOTERIA + " INTEGER," +
+                                                        "UNIQUE (" + COLUNA_NUMERO + ")," +
                                                         "FOREIGN KEY (" + COLUNA_ID_LOTERIA + ") REFERENCES " + TABELA_LOTERIA + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_SORTEIO = "CREATE TABLE " + TABELA_SORTEIO + "(" +
                                                         "" + COLUNA_ID + " INTEGER PRIMARY KEY," +
                                                         "" + COLUNA_NUMERO_SORTEIO + " INTEGER," +
                                                         "" + COLUNA_ID_CONCURSO + " INTEGER," +
+                                                        "UNIQUE (" + COLUNA_NUMERO_SORTEIO + "," + COLUNA_ID_CONCURSO + "), " +
                                                         "FOREIGN KEY (" + COLUNA_ID_CONCURSO + ") REFERENCES " + TABELA_CONCURSO + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_NUMEROSORTEADO = "CREATE TABLE " + TABELA_NUMEROSORTEADO + "(" +
                                                                 "" + COLUNA_ID + " INTEGER PRIMARY KEY," +
                                                                 "" + COLUNA_NUMERO + " INTEGER," +
                                                                 "" + COLUNA_ID_SORTEIO + " INTEGER," +
+                                                                "UNIQUE (" + COLUNA_NUMERO + ", " + COLUNA_ID_SORTEIO + "), " +
                                                                 "FOREIGN KEY (" + COLUNA_ID_SORTEIO + ") REFERENCES " + TABELA_SORTEIO + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_JOGOCONCURSO= "CREATE TABLE " + TABELA_JOGOCONSURSO + "(" +
                                                                 "" + COLUNA_ID + " INTEGER PRIMARY KEY," +
                                                                 "" + COLUNA_ID_JOGO + " INTEGER," +
                                                                 "" + COLUNA_ID_CONCURSO + " INTEGER," +
+                                                                "UNIQUE (" + COLUNA_ID_JOGO + ", " + COLUNA_ID_CONCURSO + ")," +
                                                                 "FOREIGN KEY (" + COLUNA_ID_JOGO + ") REFERENCES " + TABELA_JOGO + "(" + COLUNA_ID + ")," +
                                                                 "FOREIGN KEY (" + COLUNA_ID_CONCURSO + ") REFERENCES " + TABELA_CONCURSO + "(" + COLUNA_ID + "))";
 
