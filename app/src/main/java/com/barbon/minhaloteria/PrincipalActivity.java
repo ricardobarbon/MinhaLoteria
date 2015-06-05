@@ -3,6 +3,7 @@ package com.barbon.minhaloteria;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +11,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.Premio;
 import com.barbon.minhaloteria.util.Internet;
 import com.barbon.minhaloteria.util.WebService;
+import com.barbon.minhaloteria.visao.JogoAdapterPrincipal;
 import com.barbon.minhaloteria.visao.JogoPrincipal;
 
 import java.util.ArrayList;
@@ -38,12 +43,33 @@ public class PrincipalActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.jogos_detalhes);
+        setContentView(R.layout.activity_principal);
 
         List<JogoPrincipal> jogos =  buscarJogos();
 
+        ListView lv = (ListView) findViewById(R.id.lista);
 
+        if (jogos.size() == 0){
 
+            RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativePrincipal);
+
+            lv.setVisibility(View.GONE);
+
+            TextView t = new TextView(this);
+            t.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+            t.setText(R.string.jogoNaoCadastrado);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                                                             RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp.addRule(RelativeLayout.CENTER_VERTICAL);
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+            relativeLayout.addView(t, lp);
+
+        }else {
+
+            lv.setAdapter(new JogoAdapterPrincipal(this, jogos));
+
+        }
     }
 
     @Override
@@ -55,17 +81,15 @@ public class PrincipalActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.mnuNovoJogo:
+                Intent intent = new Intent("com.barbon.minhaLoteria.novoJogo");
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private List<JogoPrincipal> buscarJogos(){

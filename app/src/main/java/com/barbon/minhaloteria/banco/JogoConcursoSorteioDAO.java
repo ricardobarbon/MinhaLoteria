@@ -2,12 +2,15 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 
 import com.barbon.minhaloteria.modelo.JogoConcurso;
 import com.barbon.minhaloteria.modelo.JogoConcursoSorteio;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Barbon on 18/03/2015.
@@ -78,6 +81,38 @@ public class JogoConcursoSorteioDAO extends DbDAO {
         String[] whereArgs = new String[]{_idJogoConcurso, _idSorteio};
 
         return deletar(NOME_TABELA, where, whereArgs);
+    }
+
+    public List<JogoConcursoSorteio> buscaJogoConcursoSorteio(JogoConcurso jogoConcurso){
+
+        Cursor c = database.query(NOME_TABELA, JogoConcursoSorteio.colunas, JogoConcursoSorteio.JogosConcursosSorteios.ID_JOGOCONCURSO + " = " + jogoConcurso.getId(),
+                                  null, null, null, null, null);
+
+        List<JogoConcursoSorteio> jogoConcursoSorteios = new ArrayList<JogoConcursoSorteio>();
+
+        if (c.moveToFirst()){
+
+            PremioDAO premioDAO = new PremioDAO(this.getmContext());
+            SorteioDAO sorteioDAO = new SorteioDAO(this.getmContext());
+
+            int idxPremio = c.getColumnIndex(JogoConcursoSorteio.JogosConcursosSorteios.ID_PREMIO);
+            int idxSorteio = c.getColumnIndex(JogoConcursoSorteio.JogosConcursosSorteios.ID_SORTEIO);
+            int idxQtdeAcerto = c.getColumnIndex(JogoConcursoSorteio.JogosConcursosSorteios.QTDE_ACERTO);
+
+            do{
+                JogoConcursoSorteio jcs = new JogoConcursoSorteio();
+                jogoConcursoSorteios.add(jcs);
+
+                jcs.setJogoConcurso(jogoConcurso);
+                jcs.setPremio(premioDAO.buscarPremio(c.getLong(idxPremio)));
+                jcs.setSorteio(sorteioDAO.buscarSorteio(c.getLong(idxSorteio)));
+                jcs.setQtdeAcerto((byte)c.getInt(idxQtdeAcerto));
+
+            }while (c.moveToNext());
+        }
+
+        return jogoConcursoSorteios;
+
     }
 
 }

@@ -2,7 +2,10 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
+import com.barbon.minhaloteria.modelo.Concurso;
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.JogoConcurso;
 
 /**
@@ -58,5 +61,23 @@ public class JogoConcursoDAO extends DbDAO {
         return deletar(NOME_TABELA, where, whereArgs);
     }
 
+    public JogoConcurso buscarJogoConcurso(Jogo jogo, Concurso concurso){
+
+        Cursor c = database.query(true, NOME_TABELA, JogoConcurso.colunas, JogoConcurso.JogosConcursos.ID_CONCURSO + "=" + concurso.getId() +
+                                   " and " + JogoConcurso.JogosConcursos.ID_JOGO + "=" + jogo.getId(), null, null, null, null, null);
+
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            JogoConcurso jogoConcurso = new JogoConcurso();
+
+            jogoConcurso.setId(c.getInt(0));
+            jogoConcurso.setJogo(jogo);
+            jogoConcurso.setConcurso(concurso);
+
+            return jogoConcurso;
+        }
+
+        return null;
+    }
 
 }

@@ -2,6 +2,7 @@ package com.barbon.minhaloteria.controle;
 
 import android.content.Context;
 
+import com.barbon.minhaloteria.banco.JogoConcursoDAO;
 import com.barbon.minhaloteria.modelo.Concurso;
 import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.JogoConcurso;
@@ -28,10 +29,14 @@ public class JogoConcursoControle {
     public JogoConcurso ultimoSorteio(Context context, Jogo jogo){
 
         ConcursoControle concursoControle = ConcursoControle.getInstance();
+        JogoConcursoDAO jogoConcursoDAO = new JogoConcursoDAO(context);
 
         Concurso concurso = concursoControle.getUltimoConcursoSorteio(context, jogo);
 
-        return null;
+        if (concurso == null)
+            return null;
+        else
+            return jogoConcursoDAO.buscarJogoConcurso(jogo, concurso);
 
     }
 }

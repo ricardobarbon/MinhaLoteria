@@ -2,8 +2,13 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.barbon.minhaloteria.modelo.NumeroSorteado;
+import com.barbon.minhaloteria.modelo.Sorteio;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Barbon on 18/03/2015.
@@ -56,5 +61,32 @@ public class NumeroSorteadoDAO extends DbDAO {
         String[] whereArgs = new String[]{_id};
 
         return deletar(NOME_TABELA, where, whereArgs);
+    }
+
+    public List<NumeroSorteado> buscarNumerosSorteados(Sorteio sorteio){
+
+        Cursor c = database.query(NOME_TABELA, NumeroSorteado.colunas, NumeroSorteado.NumerosSorteados.ID_SORTEIO + " = " + sorteio.getId(),
+                null, null, null, NumeroSorteado.NumerosSorteados.NUMERO, null);
+
+        List<NumeroSorteado> numeroSorteados = new ArrayList<NumeroSorteado>();
+
+        if (c.moveToFirst()){
+
+            int idxId = c.getColumnIndex(NumeroSorteado.NumerosSorteados._ID);
+            int idxNumero = c.getColumnIndex(NumeroSorteado.NumerosSorteados.NUMERO);
+
+            do{
+                NumeroSorteado ns = new NumeroSorteado();
+                numeroSorteados.add(ns);
+
+                ns.setId(c.getLong(idxId));
+                ns.setNumero((byte)c.getInt(idxNumero));
+                ns.setSorteio(sorteio);
+
+            }while (c.moveToNext());
+        }
+
+        return numeroSorteados;
+
     }
 }

@@ -21,6 +21,7 @@ public class Loteria {
     private String descricao;
     private byte qtdeMinMarcacao;
     private byte qtdeMaxMarcacao;
+    private int imagem;
     private List<Premio> premios;
 
     public long getId() {
@@ -61,6 +62,14 @@ public class Loteria {
 
     public void setPremios(List<Premio> premios) {
         this.premios = premios;
+    }
+
+    public int getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(int imagem) {
+        this.imagem = imagem;
     }
 
     /**

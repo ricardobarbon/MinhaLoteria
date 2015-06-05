@@ -2,6 +2,7 @@ package com.barbon.minhaloteria.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.barbon.minhaloteria.modelo.Sorteio;
 
@@ -56,5 +57,25 @@ public class SorteioDAO extends DbDAO {
         String[] whereArgs = new String[]{_id};
 
         return deletar(NOME_TABELA, where, whereArgs);
+    }
+
+    public Sorteio buscarSorteio(long id){
+
+        Cursor c = database.query(true, NOME_TABELA, Sorteio.colunas, Sorteio.Sorteios._ID + "=" + id, null, null, null, null, null);
+
+        if (c.getCount() > 0){
+            NumeroSorteadoDAO numeroSorteadoDAO = new NumeroSorteadoDAO(this.getmContext());
+
+            c.moveToFirst();
+            Sorteio sorteio = new Sorteio();
+
+            sorteio.setId(c.getLong(0));
+            sorteio.setNumeroSorteio(c.getInt(1));
+            sorteio.setNumerosSorteados(numeroSorteadoDAO.buscarNumerosSorteados(sorteio));
+
+            return sorteio;
+        }
+
+        return null;
     }
 }

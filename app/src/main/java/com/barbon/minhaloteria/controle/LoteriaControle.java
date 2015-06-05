@@ -2,6 +2,7 @@ package com.barbon.minhaloteria.controle;
 
 import android.content.Context;
 
+import com.barbon.minhaloteria.R;
 import com.barbon.minhaloteria.banco.LoteriaDAO;
 import com.barbon.minhaloteria.banco.PremioDAO;
 import com.barbon.minhaloteria.modelo.Jogo;
@@ -19,6 +20,10 @@ public class LoteriaControle {
     public static final String LOTOFACIL = "LOTOFÁCIL";
     public static final String MEGASENA = "MEGA-SENA";
     public static final String QUINA = "QUINA";
+
+    public static final int LOTOFACIL_IMAGEM = R.drawable.logo_lotofacil_gde;
+    public static final int MEGASENA_IMAGEM = R.drawable.logo_megasena_gde;
+    public static final int QUINA_IMAGEM = R.drawable.logo_quina_gde;
 
     public static  final int LOTOFACIL_PROXIMOS_CONCURSOS = 12;
     public static  final int MEGASENA_PROXIMOS_CONCURSOS = 8;
@@ -131,6 +136,13 @@ public class LoteriaControle {
 
         for (Loteria l: loterias){
             l.setPremios(premioDAO.listarPremiosPorLoteria(l));
+
+            if (l.getDescricao().equalsIgnoreCase(LOTOFACIL))
+                l.setImagem(LOTOFACIL_IMAGEM);
+            else if (l.getDescricao().equalsIgnoreCase(MEGASENA))
+                l.setImagem(MEGASENA_IMAGEM);
+            else if (l.getDescricao().equalsIgnoreCase(QUINA))
+                l.setImagem(QUINA_IMAGEM);
         }
 
         return loterias;
