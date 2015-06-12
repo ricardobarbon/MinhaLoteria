@@ -17,103 +17,42 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
+            android:id="@+id/spinnerLoteriaNovoJogo"
             android:layout_gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutNumerosPrincipal">
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:gravity="center">
+                android:gravity="center"
+                android:id="@+id/layoutNumeros">
 
-                <ToggleButton
-                    android:layout_width="40dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="01"
-                    android:id="@+id/toggleButton"
-                    android:layout_gravity="center_horizontal"
-                    android:textOff="01"
-                    android:textOn="01" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="33"
+                    android:id="@+id/textView"
+                    style="@style/NumeroLotofacil"
+                    android:layout_margin="5dp" />
 
-                <ToggleButton
-                    android:layout_width="40dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton2"
-                    android:layout_gravity="center_vertical"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton3"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton4"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton5"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton6"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="01"
-                    android:id="@+id/toggleButton7"
-                    android:textOff="01"
-                    android:textOn="01" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton7"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton7"
-                    android:textOff="02"
-                    android:textOn="02" />
-
-                <ToggleButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:id="@+id/toggleButton7"
-                    android:textOff="02"
-                    android:textOn="02" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/textView2"
+                    style="@style/NumeroLotofacil"
+                    android:layout_margin="5dp" />
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

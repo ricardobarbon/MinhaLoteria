@@ -1,5 +1,6 @@
 package com.barbon.minhaloteria.controle;
 
+import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.Premio;
 
 import java.util.ArrayList;
@@ -24,19 +25,19 @@ public class PremioControle {
         return instance;
     }
 
-    protected List<Premio> criaPremiosLotofacil(){
-        return criaLista(11, 15);
+    protected List<Premio> criaPremiosLotofacil(Loteria loteria){
+        return criaLista(11, 15, loteria);
     }
 
-    protected List<Premio> criaPremiosQuina(){
-        return criaLista(3,5);
+    protected List<Premio> criaPremiosQuina(Loteria loteria){
+        return criaLista(3,5, loteria);
     }
 
-    protected List<Premio> criaPremiosMegaSena(){
-        return criaLista(4,6);
+    protected List<Premio> criaPremiosMegaSena(Loteria loteria){
+        return criaLista(4,6, loteria);
     }
 
-    private List<Premio> criaLista(int menosAcerto, int maiorAcerto){
+    private List<Premio> criaLista(int menosAcerto, int maiorAcerto, Loteria loteria){
         List<Premio> l = new ArrayList<Premio>();
         int c = maiorAcerto - menosAcerto + 1;
 
@@ -46,6 +47,7 @@ public class PremioControle {
 
             p.setQtdeAcerto((byte)i);
             p.setNivel((byte)c);
+            p.setLoteria(loteria);
 
             l.add(p);
 

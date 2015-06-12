@@ -1,6 +1,7 @@
 package com.barbon.minhaloteria.controle;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.barbon.minhaloteria.banco.JogoDAO;
 import com.barbon.minhaloteria.modelo.Concurso;
@@ -36,6 +37,7 @@ public class JogoControle {
         NumeroJogadoControle numeroJogadoControle = NumeroJogadoControle.getInstance();
 
         List<Loteria> loterias = loteriaControle.getLoterias(context);
+        Log.i("Loteria1", loterias.size() + "");
         List<Jogo> jogos = jogoDAO.listarJogos();
 
         for (Jogo j: jogos){

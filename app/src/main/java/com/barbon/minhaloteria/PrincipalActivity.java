@@ -42,8 +42,9 @@ public class PrincipalActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_principal);
+
+        LoteriaControle.getInstance().criarLoterias(this);
 
         List<JogoPrincipal> jogos =  buscarJogos();
 

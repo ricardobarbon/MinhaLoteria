@@ -1,8 +1,66 @@
 <resources>
+    
+    <item name="lotofacil" type="color">#930089</item>
+    <item name="quina" type="color">#260085</item>
+    <item name="mega" type="color">#22996A</item>
+    <item name="numeroMarcado" type="color">#000000</item>
+    <item name="fonteMarcada" type="color">#FFFFFF</item>
+
+    <integer-array name="coresLoterias">
+        <item>@color/lotofacil</item>
+        <item>@color/quina</item>
+        <item>@color/mega</item>
+        <item>@color/numeroMarcado</item>
+        <item>@color/fonteMarcada</item>
+    </integer-array>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="NumeroLotofacil" parent="android:TextAppearance.DeviceDefault.Medium">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:background">@drawable/back_lotofacil</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/lotofacil</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="NumeroQuina" parent="android:TextAppearance.DeviceDefault.Medium">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:background">@drawable/back_quina</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/quina</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="NumeroMega" parent="android:TextAppearance.DeviceDefault.Medium">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:background">@drawable/back_mega</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/mega</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="NumeroMegaSelecionado" parent="NumeroMega">
+        <item name="android:textColor">@color/fonteMarcada</item>
+        <item name="android:background">@drawable/back_mega_marcado</item>
+    </style>
+
+    <style name="NumeroLotofacilSelecionado" parent="NumeroMega">
+        <item name="android:textColor">@color/fonteMarcada</item>
+        <item name="android:background">@drawable/back_lotofacil_marcado</item>
+    </style>
+
+    <style name="NumeroQuinaSelecionado" parent="NumeroMega">
+        <item name="android:textColor">@color/fonteMarcada</item>
+        <item name="android:background">@drawable/back_quina_marcado</item>
+    </style>
 </resources>

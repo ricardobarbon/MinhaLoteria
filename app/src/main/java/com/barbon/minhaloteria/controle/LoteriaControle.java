@@ -90,13 +90,13 @@ public class LoteriaControle {
 
         switch (descricao){
             case LOTOFACIL:
-                l.setPremios(p.criaPremiosLotofacil());
+                l.setPremios(p.criaPremiosLotofacil(l));
                 break;
             case QUINA:
-                l.setPremios(p.criaPremiosQuina());
+                l.setPremios(p.criaPremiosQuina(l));
                 break;
             case MEGASENA:
-                l.setPremios(p.criaPremiosMegaSena());
+                l.setPremios(p.criaPremiosMegaSena(l));
                 break;
         }
 

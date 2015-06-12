@@ -118,7 +118,7 @@ public class LoteriaDAO extends DbDAO {
 
     public List<Loteria> listarLoterias(){
 
-        Cursor c = database.query(NOME_TABELA, Loteria.colunas, null, null, null, null, null, null);
+        Cursor c = database.query(NOME_TABELA, Loteria.colunas, null, null, null, null, Loteria.Loterias.DESCRICAO, null);
 
         List<Loteria> loterias = new ArrayList<Loteria>();
 

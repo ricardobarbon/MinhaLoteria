@@ -148,8 +148,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CRIA_TABELA_JOGOCONCURSOSORTEIO);
 
         Log.i("BANCO","Criou o banco de dados");
-        /*
-        LoteriaControle loteriaControle = LoteriaControle.getInstance(mContext);
+
+        /*LoteriaControle loteriaControle = LoteriaControle.getInstance();
 
         loteriaControle.criarLoterias(mContext);
 
