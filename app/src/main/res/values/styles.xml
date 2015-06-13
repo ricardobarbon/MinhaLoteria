@@ -5,6 +5,7 @@
     <item name="mega" type="color">#22996A</item>
     <item name="numeroMarcado" type="color">#000000</item>
     <item name="fonteMarcada" type="color">#FFFFFF</item>
+    <item name="azul" type="color">#00008B</item>
 
     <integer-array name="coresLoterias">
         <item>@color/lotofacil</item>
@@ -12,11 +13,16 @@
         <item>@color/mega</item>
         <item>@color/numeroMarcado</item>
         <item>@color/fonteMarcada</item>
+        <item>@color/azul</item>
     </integer-array>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/MeuAppActionBar</item>
+    </style>
+
+    <style name="MeuAppActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@color/azul</item>
     </style>
 
     <style name="NumeroLotofacil" parent="android:TextAppearance.DeviceDefault.Medium">
