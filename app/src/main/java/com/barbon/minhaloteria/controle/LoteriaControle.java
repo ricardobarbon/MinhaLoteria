@@ -25,9 +25,25 @@ public class LoteriaControle {
     public static final int MEGASENA_IMAGEM = R.drawable.logo_megasena_gde;
     public static final int QUINA_IMAGEM = R.drawable.logo_quina_gde;
 
+    private static final int LOTOFACIL_BACKGROUND = R.drawable.back_lotofacil;
+    private static final int MEGASENA_BACKGROUND = R.drawable.back_mega;
+    private static final int QUINA_BACKGROUND = R.drawable.back_quina;
+
+    private static final int LOTOFACIL_BACKGROUND_MARCADO = R.drawable.back_lotofacil_marcado;
+    private static final int MEGASENA_BACKGROUND_MARCADO = R.drawable.back_mega_marcado;
+    private static final int QUINA_BACKGROUND_MARCADO = R.drawable.back_quina_marcado;
+
+    private static final int LOTOFACIL_COR = R.color.lotofacil;
+    private static final int MEGASENA_COR= R.color.mega;
+    private static final int QUINA_COR = R.color.quina;
+
     public static  final int LOTOFACIL_PROXIMOS_CONCURSOS = 12;
     public static  final int MEGASENA_PROXIMOS_CONCURSOS = 8;
     public static  final int QUINA_PROXIMOS_CONCURSOS = 24;
+
+    private static final int LOTOFACIL_QTDE_NUMEROS = 25;
+    private static final int MEGA_QTDE_NUMEROS = 60;
+    private static final int QUINA_QTDE_NUMEROS = 80;
 
     private static LoteriaControle instance;
     private static List<Loteria> loterias;
@@ -161,6 +177,58 @@ public class LoteriaControle {
             loteria = loterias.get(index);
         else
             loteria = null;
+    }
+
+    public int recuperarQtdeNumeros(Loteria loteria){
+        switch (loteria.getDescricao()){
+            case LOTOFACIL:
+                return LOTOFACIL_QTDE_NUMEROS;
+            case QUINA:
+                return QUINA_QTDE_NUMEROS;
+            case MEGASENA:
+                return MEGA_QTDE_NUMEROS;
+            default:
+                throw new IllegalArgumentException("Loteria inválida...");
+        }
+    }
+
+    public int recuperarBackground(Loteria loteria){
+        switch (loteria.getDescricao()){
+            case LOTOFACIL:
+                return LOTOFACIL_BACKGROUND;
+            case QUINA:
+                return QUINA_BACKGROUND;
+            case MEGASENA:
+                return MEGASENA_BACKGROUND;
+            default:
+                throw new IllegalArgumentException("Loteria inválida...");
+        }
+    }
+
+    public int recuperarBackgroundMarcado(Loteria loteria){
+        switch (loteria.getDescricao()){
+            case LOTOFACIL:
+                return LOTOFACIL_BACKGROUND_MARCADO;
+            case QUINA:
+                return QUINA_BACKGROUND_MARCADO;
+            case MEGASENA:
+                return MEGASENA_BACKGROUND_MARCADO;
+            default:
+                throw new IllegalArgumentException("Loteria inválida...");
+        }
+    }
+
+    public int recuperarCor(Loteria loteria){
+        switch (loteria.getDescricao()){
+            case LOTOFACIL:
+                return LOTOFACIL_COR;
+            case QUINA:
+                return QUINA_COR;
+            case MEGASENA:
+                return MEGASENA_COR;
+            default:
+                throw new IllegalArgumentException("Loteria inválida...");
+        }
     }
 
     public class DescricaoComparator implements Comparator<Loteria>{

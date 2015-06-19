@@ -60,12 +60,12 @@
         <item name="android:background">@drawable/back_mega_marcado</item>
     </style>
 
-    <style name="NumeroLotofacilSelecionado" parent="NumeroMega">
+    <style name="NumeroLotofacilSelecionado" parent="NumeroLotofacil">
         <item name="android:textColor">@color/fonteMarcada</item>
         <item name="android:background">@drawable/back_lotofacil_marcado</item>
     </style>
 
-    <style name="NumeroQuinaSelecionado" parent="NumeroMega">
+    <style name="NumeroQuinaSelecionado" parent="NumeroQuina">
         <item name="android:textColor">@color/fonteMarcada</item>
         <item name="android:background">@drawable/back_quina_marcado</item>
     </style>
