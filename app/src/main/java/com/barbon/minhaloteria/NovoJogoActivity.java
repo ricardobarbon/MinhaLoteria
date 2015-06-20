@@ -1,22 +1,20 @@
 package com.barbon.minhaloteria;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,19 +25,25 @@ import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.NumeroJogado;
 import com.barbon.minhaloteria.visao.LoteriaAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class NovoJogoActivity extends ActionBarActivity {
+public class NovoJogoActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
     private CheckBox chkPermanente;
     private TextView txtNumerosSelecionados;
     private LinearLayout linearLayoutNumerosPrincipal;
+    private EditText eTxtDescricao;
+    private Spinner spinner;
 
     private List<Loteria> loterias;
     private List<NumeroJogado> numeroJogados;
+    private List<NumeroJogado> numerosMarcados;
 
-    LoteriaControle loteriaControle;
-    NumeroJogadoControle numeroJogadoControle;
+    private LoteriaControle loteriaControle;
+    private NumeroJogadoControle numeroJogadoControle;
+    private NumeroJogadoControle.ComparatorByNumero comparatorByNumero;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -49,16 +53,20 @@ public class NovoJogoActivity extends ActionBarActivity {
 
         loteriaControle = LoteriaControle.getInstance();
         numeroJogadoControle = NumeroJogadoControle.getInstance();
+        comparatorByNumero = new NumeroJogadoControle.ComparatorByNumero();
 
         loterias = LoteriaControle.getLoterias(this);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerLoteriaNovoJogo);
+        spinner = (Spinner) findViewById(R.id.spinnerLoteriaNovoJogo);
 
         spinner.setAdapter(new LoteriaAdapter(this, this, R.layout.loteria_spinner, loterias));
+
+        spinner.setOnItemSelectedListener(this);
 
         chkPermanente = (CheckBox) findViewById(R.id.checkPermanente);
         txtNumerosSelecionados = (TextView) findViewById(R.id.txtNumerosSelecionados);
         linearLayoutNumerosPrincipal = (LinearLayout) findViewById(R.id.layoutNumerosPrincipal);
+        eTxtDescricao = (EditText) findViewById(R.id.eTxtDescricao);
 
         iniciarTelaLoteria(loterias.get(spinner.getSelectedItemPosition()));
     }
@@ -88,6 +96,13 @@ public class NovoJogoActivity extends ActionBarActivity {
 
     private void iniciarTelaLoteria(Loteria loteria){
 
+        eTxtDescricao.setText("");
+
+        numerosMarcados = new ArrayList<NumeroJogado>();
+        setTxtNumerosSelecionados();
+
+        chkPermanente.setChecked(false);
+
         numeroJogados = numeroJogadoControle.geraListaNumerosPossiveis(loteria);
 
         linearLayoutNumerosPrincipal.removeAllViews();
@@ -99,15 +114,30 @@ public class NovoJogoActivity extends ActionBarActivity {
                 ll = criarLinearLayoutNumeros();
                 linearLayoutNumerosPrincipal.addView(ll);
             }
-            ll.addView(criarTextView(i, loteria));
+            ll.addView(criarTextView(numeroJogados.get(i - 1), loteria));
+        }
+
+    }
+
+    private void setTxtNumerosSelecionados(){
+
+        switch (numerosMarcados.size()){
+            case 0:
+                txtNumerosSelecionados.setText("");
+                break;
+            case 1:
+                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + R.string.numero_selecionado);
+                break;
+            default:
+                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + R.string.numeros_selecionados);
+                break;
         }
 
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private TextView criarTextView(int i, Loteria loteria){
-        String is = String.valueOf(i);
-
+    private TextView criarTextView(NumeroJogado numero, Loteria loteria){
+        String is = String.valueOf(numero.getNumero());
         TextView txt = new TextView(this);
 
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
@@ -122,35 +152,36 @@ public class NovoJogoActivity extends ActionBarActivity {
         txt.setPadding(padding, padding, padding, padding);
         txt.setTextColor(getResources().getColor(loteriaControle.recuperarCor(loteria)));
         txt.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        txt.setText((is.length() == 1? "0":"") + is);
+        txt.setText((is.length() == 1 ? "0" : "") + is);
         txt.setElevation(10);
+        txt.setClickable(true);
+        txt.setTag(numero);
+
+        txt.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                Collections.sort(numerosMarcados, comparatorByNumero);
+
+                NumeroJogado numeroJogado = (NumeroJogado)v.getTag();
+
+                if (Collections.binarySearch(numerosMarcados, (NumeroJogado)v.getTag(), comparatorByNumero) == 0){
+                    v.setBackgroundResource(loteriaControle.recuperarBackground(loterias.get(spinner.getSelectedItemPosition())));
+                }
+                else{
+                    v.setBackgroundResource(loteriaControle.recuperarBackgroundMarcado(loterias.get(spinner.getSelectedItemPosition())));
+                }
+
+                Toast.makeText(getContexto(), numeroJogado.getNumero() + "", Toast.LENGTH_LONG).show();
+            }
+        });
 
         return txt;
+    }
 
-        /*LinearLayout ll = (LinearLayout)findViewById(R.id.layoutNumeros);
-
-        ll.removeAllViews();
-
-        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
-
-        txts = new TextView[5];
-
-        for (int i = 1; i < numeroJogados.size(); i++){
-            txts[i] = new TextView(this);
-            txts[i].setTextAppearance(this, android.R.style.TextAppearance_Medium);
-            txts[i].setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)txts[i].getLayoutParams();
-            lp.setMargins(margin, margin, margin, margin);
-            txts[i].setBackgroundResource(R.drawable.back_lotofacil);
-            txts[i].setPadding(padding, padding, padding, padding);
-            txts[i].setTextColor(getResources().getColor(R.color.lotofacil));
-            txts[i].setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-            txts[i].setText("33");
-            txts[i].setElevation(10);
-            ll.addView(txts[i]);
-        }*/
+    private Context getContexto(){
+        return this;
     }
 
     private LinearLayout criarLinearLayoutNumeros(){
@@ -164,5 +195,15 @@ public class NovoJogoActivity extends ActionBarActivity {
         ll.setLayoutParams(llParams);
 
         return ll;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        iniciarTelaLoteria(loterias.get(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

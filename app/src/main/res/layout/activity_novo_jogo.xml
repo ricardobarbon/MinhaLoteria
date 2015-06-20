@@ -21,6 +21,18 @@
             android:layout_gravity="center_horizontal"
             android:popupElevation="20dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/descricao"
+            android:id="@+id/txtDescricao" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/eTxtDescricao"
+            android:layout_gravity="center_horizontal" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -41,40 +53,48 @@
                 android:id="@+id/txtNumerosSelecionados"
                 android:textSize="15sp"
                 android:gravity="right" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutNumerosPrincipal">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollNumeros" >
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/layoutNumeros"
-                android:gravity="center">
+                android:id="@+id/layoutNumerosPrincipal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="33"
-                    android:id="@+id/textView"
-                    style="@style/NumeroLotofacil"
-                    android:layout_margin="5dp" />
+                    android:id="@+id/layoutNumeros"
+                    android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/textView2"
-                    style="@style/NumeroLotofacil"
-                    android:layout_margin="5dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="33"
+                        android:id="@+id/textView"
+                        style="@style/NumeroLotofacil"
+                        android:layout_margin="5dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Medium Text"
+                        android:id="@+id/textView2"
+                        style="@style/NumeroLotofacil"
+                        android:layout_margin="5dp" />
+                </LinearLayout>
+
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

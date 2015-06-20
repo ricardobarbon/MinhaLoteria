@@ -9,6 +9,7 @@ import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.NumeroJogado;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -53,5 +54,13 @@ public class NumeroJogadoControle {
         }
 
         return numeroJogados;
+    }
+
+    public static class ComparatorByNumero implements Comparator<NumeroJogado>{
+
+        @Override
+        public int compare(NumeroJogado lhs, NumeroJogado rhs) {
+            return lhs.getNumero() - rhs.getNumero();
+        }
     }
 }
