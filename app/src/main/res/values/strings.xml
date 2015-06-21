@@ -15,4 +15,5 @@
     <string name="numero_selecionado">número selecionado</string>
     <string name="numeros_selecionados">números selecionados</string>
     <string name="title_activity_novo_jogo">Novo Jogo</string>
+    <string name="qtde_maxima">Já marcou a quantidade máxima!</string>
 </resources>

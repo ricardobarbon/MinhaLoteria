@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -40,10 +41,13 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
     private List<Loteria> loterias;
     private List<NumeroJogado> numeroJogados;
     private List<NumeroJogado> numerosMarcados;
+    private Loteria loteria;
 
     private LoteriaControle loteriaControle;
     private NumeroJogadoControle numeroJogadoControle;
     private NumeroJogadoControle.ComparatorByNumero comparatorByNumero;
+
+    private MenuItem menuItemSalvar;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -67,15 +71,21 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
         txtNumerosSelecionados = (TextView) findViewById(R.id.txtNumerosSelecionados);
         linearLayoutNumerosPrincipal = (LinearLayout) findViewById(R.id.layoutNumerosPrincipal);
         eTxtDescricao = (EditText) findViewById(R.id.eTxtDescricao);
+        menuItemSalvar = (MenuItem) findViewById(R.id.mnuSalvarJogo);
 
-        iniciarTelaLoteria(loterias.get(spinner.getSelectedItemPosition()));
+        loteria = loterias.get(spinner.getSelectedItemPosition());
+
+        iniciarTelaLoteria(loteria);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_novo_jogo, menu);
+        menuItemSalvar = menu.findItem(R.id.mnuSalvarJogo);
+        menuItemSalvar.setVisible(false);
+
         return true;
     }
 
@@ -114,7 +124,7 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
                 ll = criarLinearLayoutNumeros();
                 linearLayoutNumerosPrincipal.addView(ll);
             }
-            ll.addView(criarTextView(numeroJogados.get(i - 1), loteria));
+            ll.addView(criarTextView(numeroJogados.get(i - 1)));
         }
 
     }
@@ -123,20 +133,26 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
 
         switch (numerosMarcados.size()){
             case 0:
-                txtNumerosSelecionados.setText("");
+                txtNumerosSelecionados.setText(" ");
                 break;
             case 1:
-                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + R.string.numero_selecionado);
+                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + getResources().getString(R.string.numero_selecionado));
                 break;
             default:
-                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + R.string.numeros_selecionados);
+                txtNumerosSelecionados.setText(numerosMarcados.size() + " " + getResources().getString(R.string.numeros_selecionados));
                 break;
         }
 
     }
 
+    private void habilitaDesabilitaSalvar(){
+
+        menuItemSalvar.setVisible(numerosMarcados.size() >= loteria.getQtdeMinMarcacao());
+
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private TextView criarTextView(NumeroJogado numero, Loteria loteria){
+    private TextView criarTextView(NumeroJogado numero){
         String is = String.valueOf(numero.getNumero());
         TextView txt = new TextView(this);
 
@@ -157,23 +173,33 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
         txt.setClickable(true);
         txt.setTag(numero);
 
-        txt.setOnClickListener(new View.OnClickListener(){
+        txt.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 Collections.sort(numerosMarcados, comparatorByNumero);
 
-                NumeroJogado numeroJogado = (NumeroJogado)v.getTag();
+                NumeroJogado numeroJogado = (NumeroJogado) v.getTag();
 
-                if (Collections.binarySearch(numerosMarcados, (NumeroJogado)v.getTag(), comparatorByNumero) == 0){
+                if (Collections.binarySearch(numerosMarcados, numeroJogado, comparatorByNumero) >= 0) {
+
                     v.setBackgroundResource(loteriaControle.recuperarBackground(loterias.get(spinner.getSelectedItemPosition())));
-                }
-                else{
+                    numerosMarcados.remove(numeroJogado);
+
+                } else {
+
+                    if (!loteriaControle.podeContinuarMarcando(loteria, numerosMarcados.size())) {
+                        Toast.makeText(getContexto(), R.string.qtde_maxima, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     v.setBackgroundResource(loteriaControle.recuperarBackgroundMarcado(loterias.get(spinner.getSelectedItemPosition())));
+                    numerosMarcados.add(numeroJogado);
                 }
 
-                Toast.makeText(getContexto(), numeroJogado.getNumero() + "", Toast.LENGTH_LONG).show();
+                habilitaDesabilitaSalvar();
+                setTxtNumerosSelecionados();
             }
         });
 
@@ -199,7 +225,11 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        iniciarTelaLoteria(loterias.get(position));
+
+        if (new LoteriaControle.DescricaoComparator().compare(loteria, loterias.get(position)) != 0) {
+            loteria = loterias.get(position);
+            iniciarTelaLoteria(loteria);
+        }
     }
 
     @Override

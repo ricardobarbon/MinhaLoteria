@@ -230,8 +230,14 @@ public class LoteriaControle {
                 throw new IllegalArgumentException("Loteria inválida...");
         }
     }
+    
+    public boolean podeContinuarMarcando(Loteria loteria, int qtdeMarcada){
 
-    public class DescricaoComparator implements Comparator<Loteria>{
+        return qtdeMarcada < loteria.getQtdeMaxMarcacao();
+
+    }
+
+    public static class DescricaoComparator implements Comparator<Loteria>{
 
         @Override
         public int compare(Loteria loteria, Loteria outraLoteria) {
@@ -239,7 +245,7 @@ public class LoteriaControle {
         }
     }
 
-    public class IdComparator implements Comparator<Loteria>{
+    public static class IdComparator implements Comparator<Loteria>{
 
         @Override
         public int compare(Loteria loteria, Loteria outraLoteria) {
