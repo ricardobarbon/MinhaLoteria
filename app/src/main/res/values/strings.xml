@@ -16,4 +16,9 @@
     <string name="numeros_selecionados">números selecionados</string>
     <string name="title_activity_novo_jogo">Novo Jogo</string>
     <string name="qtde_maxima">Já marcou a quantidade máxima!</string>
+    <string name="ok">"OK"</string>
+    <string name="jogo_ja_existente">"Jogo já existente!"</string>
+    <string name="alerta">"Alerta"</string>
+    <string name="jogoSalvo">"Jogo salvo com sucesso!"</string>
+    <string name="jogoNaoSalvo">"Ocorreu um erro ao salvar o jogo!"</string>
 </resources>

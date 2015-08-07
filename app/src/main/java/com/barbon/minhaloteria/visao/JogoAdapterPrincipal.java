@@ -1,6 +1,7 @@
 package com.barbon.minhaloteria.visao;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class JogoAdapterPrincipal extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.idLoteria.setText(jogoPrincipal.jogo.getDescricao() + (jogoPrincipal.jogo.isJogoPermanente()? " (" + R.string.permanente + ")": ""));
+        holder.idLoteria.setText(jogoPrincipal.jogo.getDescricao() + (jogoPrincipal.jogo.isJogoPermanente()? " (" + context.getResources().getString(R.string.permanente) + ")": ""));
         holder.logoLoteria.setImageResource(jogoPrincipal.jogo.getLoteria().getImagem());
         holder.numeros.setText(definirNumeros(jogoPrincipal));
 

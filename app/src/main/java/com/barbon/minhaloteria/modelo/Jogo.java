@@ -1,12 +1,16 @@
 package com.barbon.minhaloteria.modelo;
 
+import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.barbon.minhaloteria.banco.DataBaseHelper;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Barbon on 22/02/2015.
@@ -70,6 +74,26 @@ public class Jogo {
 
     public void setJogoConcursos(List<JogoConcurso> jogoConcursos) {
         this.jogoConcursos = jogoConcursos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Jogo jogo = (Jogo) o;
+
+        if (numerosJogados != null ? !numerosJogados.equals(jogo.numerosJogados) : jogo.numerosJogados != null)
+            return false;
+        return !(loteria != null ? !loteria.equals(jogo.loteria) : jogo.loteria != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = numerosJogados != null ? numerosJogados.hashCode() : 0;
+        result = 31 * result + (loteria != null ? loteria.hashCode() : 0);
+        return result;
     }
 
     public static final class Jogos implements BaseColumns{

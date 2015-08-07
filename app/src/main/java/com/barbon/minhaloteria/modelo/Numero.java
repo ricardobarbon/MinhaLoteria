@@ -22,4 +22,19 @@ public abstract class Numero {
     public void setNumero(byte numero) {
         this.numero = numero;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Numero numero1 = (Numero) o;
+
+        return numero == numero1.numero;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) numero;
+    }
 }

@@ -1,6 +1,7 @@
 package com.barbon.minhaloteria.controle;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.barbon.minhaloteria.R;
 import com.barbon.minhaloteria.banco.LoteriaDAO;
@@ -153,30 +154,33 @@ public class LoteriaControle {
         for (Loteria l: loterias){
             l.setPremios(premioDAO.listarPremiosPorLoteria(l));
 
-            if (l.getDescricao().equalsIgnoreCase(LOTOFACIL))
+            if (l.getDescricao().equalsIgnoreCase(LOTOFACIL)) {
                 l.setImagem(LOTOFACIL_IMAGEM);
-            else if (l.getDescricao().equalsIgnoreCase(MEGASENA))
+            }
+            else if (l.getDescricao().equalsIgnoreCase(MEGASENA)) {
                 l.setImagem(MEGASENA_IMAGEM);
-            else if (l.getDescricao().equalsIgnoreCase(QUINA))
+            }
+            else if (l.getDescricao().equalsIgnoreCase(QUINA)) {
                 l.setImagem(QUINA_IMAGEM);
+            }
         }
 
         return loterias;
     }
 
-    public void definirLoteria(List<Loteria> loterias, Loteria loteria){
+    public void definirLoteria(List<Loteria> loterias, Jogo jogo){
         int index;
 
         IdComparator idComparator = new IdComparator();
 
         Collections.sort(loterias, idComparator);
 
-        index = Collections.binarySearch(loterias, loteria, idComparator);
+        index = Collections.binarySearch(loterias, jogo.getLoteria(), idComparator);
 
         if (index >= 0)
-            loteria = loterias.get(index);
+            jogo.setLoteria(loterias.get(index));
         else
-            loteria = null;
+            jogo.setLoteria(null);
     }
 
     public int recuperarQtdeNumeros(Loteria loteria){

@@ -61,7 +61,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                         "" + COLUNA_DESCRICAO + " TEXT," +
                                                         "" + COLUNA_JOGO_PERMANENTE + " INTEGER," +
                                                         "" + COLUNA_ID_LOTERIA + " INTEGER," +
-                                                        "UNIQUE (" + COLUNA_DESCRICAO + ")," +
                                                         "FOREIGN KEY(" + COLUNA_ID_LOTERIA + ") REFERENCES " + TABELA_LOTERIA + "(" + COLUNA_ID + "))";
 
     private static final String CRIA_TABELA_NUMEROJOGADO = "CREATE TABLE " + TABELA_NUMEROJOGADO + "(" +

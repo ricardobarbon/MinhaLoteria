@@ -1,6 +1,7 @@
 package com.barbon.minhaloteria;
 
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
@@ -20,10 +21,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.barbon.minhaloteria.controle.JogoControle;
 import com.barbon.minhaloteria.controle.LoteriaControle;
 import com.barbon.minhaloteria.controle.NumeroJogadoControle;
+import com.barbon.minhaloteria.modelo.Jogo;
 import com.barbon.minhaloteria.modelo.Loteria;
 import com.barbon.minhaloteria.modelo.NumeroJogado;
+import com.barbon.minhaloteria.visao.AlertaOkFragment;
 import com.barbon.minhaloteria.visao.LoteriaAdapter;
 
 import java.util.ArrayList;
@@ -97,7 +101,10 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.mnuSalvarJogo) {
+
+            salvarJogo();
+
             return true;
         }
 
@@ -235,5 +242,41 @@ public class NovoJogoActivity extends ActionBarActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void salvarJogo(){
+
+        FragmentManager fm = getFragmentManager();
+        JogoControle jogoControle = JogoControle.getInstance();
+        Jogo jogo = new Jogo();
+
+        jogo.setLoteria(loteria);
+        jogo.setDescricao(eTxtDescricao.getText().toString());
+        jogo.setJogoPermanente(chkPermanente.isChecked());
+        jogo.setNumerosJogados(numerosMarcados);
+
+        for (NumeroJogado nj: numerosMarcados){
+            nj.setJogo(jogo);
+        }
+
+        if (jogoControle.jogoJaExiste(this, jogo)){
+            AlertaOkFragment alertaOk = new AlertaOkFragment();
+
+            alertaOk.setMensagem(getResources().getString(R.string.jogo_ja_existente));
+            alertaOk.setTitulo(getResources().getString(R.string.alerta));
+
+            alertaOk.show(fm, "Alerta");
+
+            return;
+        }
+
+        jogoControle.salvarJogo(this, jogo);
+
+        if (jogo.getId() != 0L){
+            Toast.makeText(this, R.string.jogoSalvo, Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(this, R.string.jogoSalvo, Toast.LENGTH_SHORT).show();
+        }
     }
 }
